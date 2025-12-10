@@ -1,4 +1,4 @@
-variable "db_password" {}
+
 
 module "network" {
   source = "../../modules/network"
