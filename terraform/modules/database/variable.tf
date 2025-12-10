@@ -1,7 +1,8 @@
-variable "subnet_id" {
-  type        = string
-  description = "Subnet ID for AWS Glue Job networking"
+
+variable "subnet_ids" {
+  type = list(string)
 }
+
 
 variable "sg_id" {
   type        = string
