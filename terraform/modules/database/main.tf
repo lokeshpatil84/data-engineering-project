@@ -1,9 +1,3 @@
-variable "subnet_ids" {
-  type = list(string)
-}
-variable "sg_id" {}
-variable "db_password" {}
-
 resource "aws_db_subnet_group" "default" {
   name       = "main_subnet_group"
   subnet_ids = var.subnet_ids
