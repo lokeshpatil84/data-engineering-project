@@ -1,17 +1,3 @@
-variable "bucket_name" {}
-variable "role_arn" {}
-variable "script_key" {}
-variable "db_endpoint" {}
-variable "db_password" {}
-variable "db_username" {}
-variable "subnet_id" {}
-variable "sg_id" {}
-
-# --- CHANGE: Connection resource ki ab zarurat nahi hai (Comment/Remove kar diya) ---
-# resource "aws_glue_connection" "rds_conn" {
-#   name = "postgres_connection"
-#   ...
-# }
 
 resource "aws_glue_catalog_database" "iceberg_db" {
   name = "iceberg_lake_db"
@@ -29,8 +15,6 @@ resource "aws_glue_job" "etl" {
     python_version  = "3"
   }
 
-  # --- IMPORTANT FIX: Connections line ko hata diya ---
-  # connections = [aws_glue_connection.rds_conn.name] 
 
   default_arguments = {
     "--job-language"                     = "python"
