@@ -1,8 +1,12 @@
-
+variable "subnet_ids" {
+  type = list(string)
+}
+variable "sg_id" {}
+variable "db_password" {}
 
 resource "aws_db_subnet_group" "default" {
   name       = "main_subnet_group"
-  subnet_ids = var.subnet_ids 
+  subnet_ids = var.subnet_ids
   
   tags = {
     Name = "My DB subnet group"
@@ -24,6 +28,3 @@ resource "aws_db_instance" "postgres" {
   vpc_security_group_ids = [var.sg_id]
   db_subnet_group_name   = aws_db_subnet_group.default.name
 }
-
-output "endpoint" { value = aws_db_instance.postgres.address }
-output "username" { value = aws_db_instance.postgres.username }
