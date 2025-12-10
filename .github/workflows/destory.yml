@@ -31,4 +31,4 @@ jobs:
       - name: Terraform Destroy
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         working-directory: terraform/environments/dev
-        run: terraform Destroy -auto-approve -input=false -var="db_password=${{ secrets.DB_PASSWORD }}"
+        run: terraform destroy -auto-approve -input=false -var="db_password=${{ secrets.DB_PASSWORD }}"
