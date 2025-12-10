@@ -1,39 +1,39 @@
-name: Deploy Data Platform
+# name: Deploy Data Platform
 
-on:
-    push:
-      branches: [ main ]
-    pull_request:
-      branches: [ main ]
+# on:
+#     push:
+#       branches: [ main ]
+#     pull_request:
+#       branches: [ main ]
 
-jobs:
-  terraform:
-    name: "Terraform Apply"
-    runs-on: ubuntu-latest
+# jobs:
+#   terraform:
+#     name: "Terraform Apply"
+#     runs-on: ubuntu-latest
     
-    defaults:
-      run:
-        working-directory: terraform/environments/dev
+#     defaults:
+#       run:
+#         working-directory: terraform/environments/dev
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v3
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+#       - name: Setup Terraform
+#         uses: hashicorp/setup-terraform@v2
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
+#       - name: Configure AWS Credentials
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:
+#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           aws-region: ap-south-1
           
-      - name: Terraform Init
-        working-directory: terraform/environments/dev
-        run: terraform init
+#       - name: Terraform Init
+#         working-directory: terraform/environments/dev
+#         run: terraform init
 
-      - name: Terraform Destroy
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        working-directory: terraform/environments/dev
-        run: terraform destroy -auto-approve -input=false -var="db_password=${{ secrets.DB_PASSWORD }}"
+#       - name: Terraform Destroy
+#         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+#         working-directory: terraform/environments/dev
+#         run: terraform destroy -auto-approve -input=false -var="db_password=${{ secrets.DB_PASSWORD }}"
