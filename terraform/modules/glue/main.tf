@@ -1,25 +1,22 @@
+variable "bucket_name" {}
+variable "role_arn" {}
+variable "script_key" {}
+variable "db_endpoint" {}
+variable "db_password" {}
+variable "db_username" {}
+variable "subnet_id" {}
+variable "sg_id" {}
 
-# 1. Glue Connection to RDS (VPC ke andar)
-resource "aws_glue_connection" "rds_conn" {
-  name = "postgres_connection"
-  connection_properties = {
-    JDBC_CONNECTION_URL = "jdbc:postgresql://${var.db_endpoint}:5432/source_db"
-    USERNAME            = var.db_username
-    PASSWORD            = var.db_password
-  }
-  physical_connection_requirements {
-    availability_zone      = "ap-south-1a"
-    security_group_id_list = [var.sg_id]
-    subnet_id              = var.subnet_id
-  }
-}
+# --- CHANGE: Connection resource ki ab zarurat nahi hai (Comment/Remove kar diya) ---
+# resource "aws_glue_connection" "rds_conn" {
+#   name = "postgres_connection"
+#   ...
+# }
 
-# 2. Glue Database for Iceberg Tables
 resource "aws_glue_catalog_database" "iceberg_db" {
   name = "iceberg_lake_db"
 }
 
-# 3. Glue Job
 resource "aws_glue_job" "etl" {
   name     = "postgres_to_iceberg_job"
   role_arn = var.role_arn
@@ -32,14 +29,15 @@ resource "aws_glue_job" "etl" {
     python_version  = "3"
   }
 
-  connections = [aws_glue_connection.rds_conn.name]
+  # --- IMPORTANT FIX: Connections line ko hata diya ---
+  # connections = [aws_glue_connection.rds_conn.name] 
 
   default_arguments = {
     "--job-language"                     = "python"
     "--datalake-formats"                 = "iceberg"
     "--conf"                             = "spark.sql.extensions=org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions"
     "--iceberg_s3_path"                  = "s3://${var.bucket_name}/warehouse/"
-    "--db_password"                      = var.db_password  
+    "--db_password"                      = var.db_password
     "--db_url"                           = "jdbc:postgresql://${var.db_endpoint}:5432/source_db"
     "--db_user"                          = var.db_username
   }
