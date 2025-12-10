@@ -8,7 +8,7 @@ resource "aws_glue_connection" "rds_conn" {
     PASSWORD            = var.db_password
   }
   physical_connection_requirements {
-    availability_zone      = "ap-south-1"
+    availability_zone      = "ap-south-1a"
     security_group_id_list = [var.sg_id]
     subnet_id              = var.subnet_id
   }
